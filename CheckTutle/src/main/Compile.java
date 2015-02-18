@@ -6,16 +6,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.swing.JOptionPane;
+
 public class Compile {
-	String blibPath = ".;C:\\forkCRiPS\\RonproEditor\\testbase\\lib\\blib.jar;C:\\forkCRiPS\\RonproEditor\\testbase\\lib\\obpro.jar;";
+	String blibPath;
 	Process process = null;
 	private InputStream in = null;
 	private BufferedReader br = null;
 	private String line = null;
 	private Thread stdRun = null;
 
-	void doCompile(File f) throws IOException {
-
+	boolean checkLib(){
+		File dir = new File("lib");
+		File path = new File(new File(dir.getAbsolutePath()),"blib.jar");
+		if(path.exists()){
+			blibPath = ".;"+path.toString()+";";
+			return true;
+		}
+		return false;
+	}
+	
+	boolean doCompile(File f) throws IOException {
+		if(checkLib()){	
+		
 		String[] commands = { "javac", "-classpath", blibPath + f.getParent(),
 				f.toString() };
 		process = Runtime.getRuntime().exec(commands);
@@ -41,6 +54,11 @@ public class Compile {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return true;
+		}else{
+			return false;
+
 		}
 
 	}
