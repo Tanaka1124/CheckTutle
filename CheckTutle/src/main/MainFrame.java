@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -17,8 +18,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 
 public class MainFrame extends JFrame {
 
@@ -42,7 +41,6 @@ public class MainFrame extends JFrame {
 	private String[] tasks;
 	private String[] students;
 	private boolean[][] groups;
-	private File[] javaFiles = null;
 
 	public String DESKTOP_PASS;
 
@@ -70,7 +68,8 @@ public class MainFrame extends JFrame {
 
 					// javaファイルを取得する．
 					sjf.clear();
-					javaFiles = sjf.listFiles(selectedDir.toString(), "*.java");
+					File[] javaFiles = sjf.listFiles(selectedDir.toString(),
+							"*.java");
 
 					// 生徒一覧を作成する
 					students = fg.studentSercher(selectedDir);
@@ -104,8 +103,7 @@ public class MainFrame extends JFrame {
 					if (option == JOptionPane.YES_OPTION) {
 						try {
 							for (File f : javaFiles) {
-								if(!cp.doCompile(f))
-									JOptionPane.showMessageDialog(menuBar, "blibライブラリが見つかりません");
+								cp.doCompile(f);
 								progess++;
 								pbar.setValue(progess);
 
@@ -145,39 +143,8 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
-		JMenuItem compile = new JMenuItem("AllFileCompile");
-		menu.add(compile);
-		compile.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				int option = JOptionPane.showConfirmDialog(menuBar,
-						"全てのJavaファイルをコンパイルしますか？（結構時間がかかります）", "再コンパイル",
-						JOptionPane.YES_NO_OPTION);
-
-				if (option == JOptionPane.YES_OPTION) {
-					try {
-						if (javaFiles != null) {
-							for (File f : javaFiles) {
-								if(!cp.doCompile(f))
-									JOptionPane.showMessageDialog(menuBar, "blibライブラリが見つかりません");
-								progess++;
-								pbar.setValue(progess);
-							}
-						}else{
-							JOptionPane.showMessageDialog(menuBar, "コンパイルするJavaフォルダが入ったファイルを指定してください");
-						}
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				} else if (option == JOptionPane.NO_OPTION) {
-
-				}
-
-			}
-		});
-
 		add(mainPane, BorderLayout.CENTER);
-		// bottomText.setText("コンパイルは結構時間かかります．動作しているかどうかはコンソールで確認して下さい　実装中→");
+		bottomText.setText("コンパイルは結構時間かかります．動作しているかどうかはコンソールで確認して下さい　実装中→");
 		bottomPane.add(bottomText);
 		bottomPane.add(pbar);
 		add(bottomPane, BorderLayout.PAGE_END);

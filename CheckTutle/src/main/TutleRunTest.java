@@ -39,7 +39,7 @@ public class TutleRunTest {
 			};
 			stdRun = new Thread(StreamThread);
 			stdRun.start();
-//			int c = process.waitFor();
+			int c = process.waitFor();
 			stdRun.join();
 
 		} catch (Exception e) {
